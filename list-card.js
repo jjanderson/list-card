@@ -158,9 +158,11 @@ class ListCard extends HTMLElement {
                         } else {
                           var image_height = 90;
                         }
-                        if (feed[entry][columns[column].field][0].hasOwnProperty('url')) {
-                            var url = feed[entry][columns[column].field][0].url
-                        } else {
+                        if (feed[entry][columns[column].field][1].hasOwnProperty('href')) {
+                            var url = feed[entry][columns[column].field][1].href
+                        } else if(feed[entry][columns[column].field][0].hasOwnProperty('url')) {
+							var url = feed[entry][columns[column].field][0].url
+						}else{
                           var url = feed[entry][columns[column].field]
                         }
                           card_content += `<img id="image" src="${url}" width="${image_width}" height="${image_height}">`;
@@ -174,7 +176,7 @@ class ListCard extends HTMLElement {
                       let newText = feed[entry][columns[column].field];
 
                       if (columns[column].hasOwnProperty('regex')) {
-                        newText = new RegExp(columns[column].regex, 'u').exec(feed[entry][columns[column].field]);
+                        newText = new RegExp(columns[column].regex).exec(feed[entry][columns[column].field]);
                       } 
                       if (columns[column].hasOwnProperty('prefix')) {
                         newText = columns[column].prefix + newText;
@@ -217,11 +219,3 @@ class ListCard extends HTMLElement {
   }
 
   customElements.define('list-card', ListCard);
-
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: "list-card",
-  name: "List Card",
-  preview: false,
-  description: "The List Card generate table with data from sensor that provides data as a list of attributes."
-});
